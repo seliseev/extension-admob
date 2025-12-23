@@ -38,7 +38,8 @@ enum MessageEvent
     EVENT_STATUS_DENIED =           14,
     EVENT_STATUS_NOT_DETERMINED =   15,
     EVENT_STATUS_RESTRICTED =       16,
-    EVENT_NOT_SUPPORTED =           17
+    EVENT_PAID =                    17,
+    EVENT_NOT_SUPPORTED =           18
 };
 
 struct CallbackData

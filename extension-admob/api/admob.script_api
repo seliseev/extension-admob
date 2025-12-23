@@ -60,7 +60,24 @@
                       `admob.EVENT_CLICKED`,
                       `admob.EVENT_DESTROYED`,
                       `admob.EVENT_IMPRESSION_RECORDED`,
-                      `admob.EVENT_JSON_ERROR`"
+                      `admob.EVENT_JSON_ERROR`,
+                      `admob.EVENT_PAID`"
+
+              - name: value_micros
+                type: number
+                optional: true
+                desc: The ad revenue value in micros (1/1,000,000 of the currency unit). Only present when event is `admob.EVENT_PAID`.
+
+              - name: currency_code
+                type: string
+                optional: true
+                desc: The currency code (e.g. "USD", "EUR"). Only present when event is `admob.EVENT_PAID`.
+
+              - name: precision
+                type: number
+                optional: true
+                desc: "The precision type of the revenue value. Only present when event is `admob.EVENT_PAID`.
+                      0 = UNKNOWN, 1 = ESTIMATED, 2 = PUBLISHER_PROVIDED, 3 = PRECISE"
 
               - name: code
                 type: number
@@ -110,6 +127,8 @@
                             print("EVENT_NOT_LOADED: can't call show_interstitial() before EVENT_LOADED\nError: "..message.error)
                         elseif message.event == admob.EVENT_IMPRESSION_RECORDED then
                             print("EVENT_IMPRESSION_RECORDED: Interstitial did record impression")
+                        elseif message.event == admob.EVENT_PAID then
+                            print("EVENT_PAID: Interstitial revenue: " .. message.value_micros .. " " .. message.currency_code)
                         elseif message.event == admob.EVENT_JSON_ERROR then
                             print("EVENT_JSON_ERROR: Internal NE json error: "..message.error)
                         end
@@ -130,6 +149,8 @@
                             print("EVENT_EARNED_REWARD: Reward: " .. tostring(message.amount) .. " " .. tostring(message.type))
                         elseif message.event == admob.EVENT_IMPRESSION_RECORDED then
                             print("EVENT_IMPRESSION_RECORDED: Rewarded did record impression")
+                        elseif message.event == admob.EVENT_PAID then
+                            print("EVENT_PAID: Rewarded revenue: " .. message.value_micros .. " " .. message.currency_code)
                         elseif message.event == admob.EVENT_JSON_ERROR then
                             print("EVENT_JSON_ERROR: Internal NE json error: "..message.error)
                         end
@@ -148,6 +169,8 @@
                             print("EVENT_DESTROYED: Banner AD destroyed")
                         elseif message.event == admob.EVENT_IMPRESSION_RECORDED then
                             print("EVENT_IMPRESSION_RECORDED: Banner did record impression")
+                        elseif message.event == admob.EVENT_PAID then
+                            print("EVENT_PAID: Banner revenue: " .. message.value_micros .. " " .. message.currency_code)
                         elseif message.event == admob.EVENT_JSON_ERROR then
                             print("EVENT_JSON_ERROR: Internal NE json error: "..message.error)
                         end
@@ -597,6 +620,13 @@
 
   - name: EVENT_NOT_SUPPORTED
     type: number
+
+  - name: EVENT_PAID
+    type: number
+    desc: "Event fired when the ad generates revenue. The message contains:
+          `value_micros` - revenue in micros (1/1,000,000 of currency),
+          `currency_code` - currency code (e.g. \"USD\"),
+          `precision` - precision type (0=UNKNOWN, 1=ESTIMATED, 2=PUBLISHER_PROVIDED, 3=PRECISE)"
 
 #*****************************************************************************************************
 

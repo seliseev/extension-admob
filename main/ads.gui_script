@@ -70,7 +70,7 @@ local function set_block_height(height)
 end
 
 if admob then
-local EVENT_TEXTS = {
+EVENT_TEXTS = {
     [admob.EVENT_CLOSED] =              "EVENT_CLOSED: %s closed",
     [admob.EVENT_FAILED_TO_SHOW] =      "EVENT_FAILED_TO_SHOW: %s failed to show",
     [admob.EVENT_OPENING] =             "EVENT_OPENING: %s is opening",
@@ -81,6 +81,7 @@ local EVENT_TEXTS = {
     [admob.EVENT_IMPRESSION_RECORDED] = "EVENT_IMPRESSION_RECORDED: %s did record impression",
     [admob.EVENT_CLICKED] =             "EVENT_CLICKED: %s clicked",
     [admob.EVENT_JSON_ERROR] =          "EVENT_JSON_ERROR: %s Internal NE json error",
+    [admob.EVENT_PAID] =                "EVENT_PAID: %s revenue",
 }
 end
 
@@ -96,6 +97,12 @@ local function print_event(ad_type, message)
         end
         if message.amount then
             text = text .. "\nAmount: " .. message.amount .. " " .. message.type
+        end
+        if message.value_micros then
+            -- Convert micros to actual currency value (divide by 1,000,000)
+            local value = message.value_micros / 1000000
+            text = text .. "\nValue: " .. string.format("%.6f", value) .. " " .. (message.currency_code or "")
+            text = text .. "\nPrecision: " .. (message.precision or "unknown")
         end
         print(text)
     end

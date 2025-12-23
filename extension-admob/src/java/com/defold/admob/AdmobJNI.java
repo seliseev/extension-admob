@@ -48,6 +48,9 @@ import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 
+import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.OnPaidEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -81,7 +84,8 @@ public class AdmobJNI implements LifecycleObserver {
   private static final int EVENT_JSON_ERROR =         11;
   private static final int EVENT_IMPRESSION_RECORDED =12;
   // 13-16 are for iOS only
-  private static final int EVENT_NOT_SUPPORTED =      17;
+  private static final int EVENT_PAID =               17;
+  private static final int EVENT_NOT_SUPPORTED =      18;
 
   private static final int SIZE_ADAPTIVE_BANNER =     0;
   private static final int SIZE_BANNER =              1;
@@ -259,6 +263,21 @@ public class AdmobJNI implements LifecycleObserver {
     admobAddToQueue(msg, message);
   }
 
+  private void sendPaidMessage(int msg, AdValue adValue) {
+    String message = null;
+    try {
+        JSONObject obj = new JSONObject();
+        obj.put("event", EVENT_PAID);
+        obj.put("value_micros", adValue.getValueMicros());
+        obj.put("currency_code", adValue.getCurrencyCode());
+        obj.put("precision", adValue.getPrecisionType());
+        message = obj.toString();
+    } catch (JSONException e) {
+        message = getJsonConversionErrorMessage(e.getLocalizedMessage());
+    }
+    admobAddToQueue(msg, message);
+  }
+
   private AdRequest createAdRequest() {
     return new AdRequest.Builder().setRequestAgent(defoldUserAgent).build();
   }
@@ -388,6 +407,12 @@ public class AdmobJNI implements LifecycleObserver {
           sendSimpleMessage(MSG_APPOPEN, EVENT_LOADED);
           mAppOpenAd = ad;
           mIsLoadingAppOpenAd = false;
+          mAppOpenAd.setOnPaidEventListener(new OnPaidEventListener() {
+            @Override
+            public void onPaidEvent(AdValue adValue) {
+              sendPaidMessage(MSG_APPOPEN, adValue);
+            }
+          });
           if (showImmediately) {
             showAppOpen();
           }
@@ -428,6 +453,12 @@ public class AdmobJNI implements LifecycleObserver {
                   // Log.d(TAG, "onAdLoaded");
                    mInterstitialAd = interstitialAd;
                    sendSimpleMessage(MSG_INTERSTITIAL, EVENT_LOADED);
+                   mInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
+                     @Override
+                     public void onPaidEvent(AdValue adValue) {
+                       sendPaidMessage(MSG_INTERSTITIAL, adValue);
+                     }
+                   });
                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
                       @Override
                       public void onAdDismissedFullScreenContent() {
@@ -525,6 +556,12 @@ public class AdmobJNI implements LifecycleObserver {
               mRewardedAd = rewardedAd;
               sendSimpleMessage(MSG_REWARDED, EVENT_LOADED);
               setRewardedCustomData(userId, customData);
+              mRewardedAd.setOnPaidEventListener(new OnPaidEventListener() {
+                @Override
+                public void onPaidEvent(AdValue adValue) {
+                  sendPaidMessage(MSG_REWARDED, adValue);
+                }
+              });
               mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
@@ -624,6 +661,12 @@ public class AdmobJNI implements LifecycleObserver {
               // Log.d(TAG, "onAdLoaded");
               mRewardedInterstitialAd = rewardedAd;
               sendSimpleMessage(MSG_REWARDED_INTERSTITIAL, EVENT_LOADED);
+              mRewardedInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
+                @Override
+                public void onPaidEvent(AdValue adValue) {
+                  sendPaidMessage(MSG_REWARDED_INTERSTITIAL, adValue);
+                }
+              });
               mRewardedInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
@@ -731,6 +774,12 @@ public class AdmobJNI implements LifecycleObserver {
       @Override
       public void run() {
           AdRequest adRequest = createAdRequest();
+          view.setOnPaidEventListener(new OnPaidEventListener() {
+            @Override
+            public void onPaidEvent(AdValue adValue) {
+              sendPaidMessage(MSG_BANNER, adValue);
+            }
+          });
           view.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
