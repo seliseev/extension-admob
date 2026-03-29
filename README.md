@@ -6,14 +6,6 @@ Defold [native extension](https://www.defold.com/manuals/extensions/) which prov
 
 ## Fork Changes
 
-### SDK Versions / Mediation
-
-- AdMob Android SDK (`play-services-ads`): **24.9.0**
-- AdMob iOS SDK (`Google-Mobile-Ads-SDK`): **12.14.0**
-- Unity Ads mediation (AdMob as mediator):
-  - Android: `com.google.ads.mediation:unity` **4.16.5.0** + `com.unity3d.ads:unity-ads` **4.16.5**
-  - iOS: `GoogleMobileAdsMediationUnity` **4.16.5.0**
-
 ### Added `EVENT_PAID` - Ad Revenue Tracking
 
 This fork adds support for ad revenue data via the `EVENT_PAID` event. This allows you to track revenue from ad impressions for analytics and LTV calculations.
