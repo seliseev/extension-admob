@@ -93,7 +93,7 @@ namespace dmAdmob {
         SendSimpleMessage(msg, dict);
     }
 
-    void SendPaidMessage(MessageId msg, GADAdValue *adValue) {
+    void SendPaidMessage(MessageId msg, GADAdValue *adValue, NSString *adUnitId, GADResponseInfo *responseInfo) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setObject:[NSNumber numberWithInt:EVENT_PAID] forKey:@"event"];
         // value is NSDecimalNumber, convert to micros (multiply by 1000000)
@@ -101,6 +101,23 @@ namespace dmAdmob {
         [dict setObject:[NSNumber numberWithLongLong:[micros longLongValue]] forKey:@"value_micros"];
         [dict setObject:adValue.currencyCode forKey:@"currency_code"];
         [dict setObject:[NSNumber numberWithInt:(int)adValue.precision] forKey:@"precision"];
+        if (adUnitId != nil) {
+            [dict setObject:adUnitId forKey:@"ad_unit_id"];
+        }
+        if (responseInfo != nil) {
+            if (responseInfo.responseIdentifier != nil) {
+                [dict setObject:responseInfo.responseIdentifier forKey:@"response_id"];
+            }
+            GADAdNetworkResponseInfo *loadedAdapter = responseInfo.loadedAdNetworkResponseInfo;
+            if (loadedAdapter != nil) {
+                if (loadedAdapter.adNetworkClassName != nil) {
+                    [dict setObject:loadedAdapter.adNetworkClassName forKey:@"mediation_adapter_class_name"];
+                }
+                if ([loadedAdapter respondsToSelector:@selector(adSourceName)] && loadedAdapter.adSourceName != nil) {
+                    [dict setObject:loadedAdapter.adSourceName forKey:@"ad_source_name"];
+                }
+            }
+        }
         SendSimpleMessage(msg, dict);
     }
 
@@ -172,7 +189,7 @@ namespace dmAdmob {
                 }
                 SetAppOpenAd(ad);
                 ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                    SendPaidMessage(MSG_APPOPEN, value);
+                    SendPaidMessage(MSG_APPOPEN, value, ad.adUnitID, ad.responseInfo);
                 };
                 SendSimpleMessage(MSG_APPOPEN, EVENT_LOADED);
                 if (showImmediately) {
@@ -245,7 +262,7 @@ namespace dmAdmob {
                 }
                 SetInterstitialAd(ad);
                 ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                    SendPaidMessage(MSG_INTERSTITIAL, value);
+                    SendPaidMessage(MSG_INTERSTITIAL, value, ad.adUnitID, ad.responseInfo);
                 };
                 SendSimpleMessage(MSG_INTERSTITIAL, EVENT_LOADED);
             }];
@@ -315,7 +332,7 @@ namespace dmAdmob {
                 ad.serverSideVerificationOptions = ssvOptions;
                 SetRewardedAd(ad);
                 ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                    SendPaidMessage(MSG_REWARDED, value);
+                    SendPaidMessage(MSG_REWARDED, value, ad.adUnitID, ad.responseInfo);
                 };
                 SendSimpleMessage(MSG_REWARDED, EVENT_LOADED);
             }];
@@ -381,7 +398,7 @@ namespace dmAdmob {
                 }
                 SetRewardedInterstitialAd(ad);
                 ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                    SendPaidMessage(MSG_REWARDED_INTERSTITIAL, value);
+                    SendPaidMessage(MSG_REWARDED_INTERSTITIAL, value, ad.adUnitID, ad.responseInfo);
                 };
                 SendSimpleMessage(MSG_REWARDED_INTERSTITIAL, EVENT_LOADED);
             }];
@@ -555,7 +572,7 @@ namespace dmAdmob {
         bannerAd.rootViewController = uiViewController;
         bannerAd.hidden = YES;
         bannerAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-            SendPaidMessage(MSG_BANNER, value);
+            SendPaidMessage(MSG_BANNER, value, bannerAd.adUnitID, bannerAd.responseInfo);
         };
         [uiViewController.view addSubview:bannerAd];
         [bannerAd loadRequest:createGADRequest()];

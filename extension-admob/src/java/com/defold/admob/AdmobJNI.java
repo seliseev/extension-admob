@@ -29,12 +29,14 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdInspectorError;
 import com.google.android.gms.ads.OnAdInspectorClosedListener;
 import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -331,7 +333,7 @@ public class AdmobJNI implements LifecycleObserver {
     admobAddToQueue(msg, message);
   }
 
-  private void sendPaidMessage(int msg, AdValue adValue) {
+  private void sendPaidMessage(int msg, AdValue adValue, String adUnitId, ResponseInfo responseInfo) {
     String message = null;
     try {
         JSONObject obj = new JSONObject();
@@ -339,6 +341,26 @@ public class AdmobJNI implements LifecycleObserver {
         obj.put("value_micros", adValue.getValueMicros());
         obj.put("currency_code", adValue.getCurrencyCode());
         obj.put("precision", adValue.getPrecisionType());
+        if (adUnitId != null) {
+            obj.put("ad_unit_id", adUnitId);
+        }
+        if (responseInfo != null) {
+            String responseId = responseInfo.getResponseId();
+            if (responseId != null) {
+                obj.put("response_id", responseId);
+            }
+            AdapterResponseInfo loadedAdapter = responseInfo.getLoadedAdapterResponseInfo();
+            if (loadedAdapter != null) {
+                String adapterClassName = loadedAdapter.getAdapterClassName();
+                if (adapterClassName != null) {
+                    obj.put("mediation_adapter_class_name", adapterClassName);
+                }
+                String adSourceName = loadedAdapter.getAdSourceName();
+                if (adSourceName != null) {
+                    obj.put("ad_source_name", adSourceName);
+                }
+            }
+        }
         message = obj.toString();
     } catch (JSONException e) {
         message = getJsonConversionErrorMessage(e.getLocalizedMessage());
@@ -478,7 +500,7 @@ public class AdmobJNI implements LifecycleObserver {
           mAppOpenAd.setOnPaidEventListener(new OnPaidEventListener() {
             @Override
             public void onPaidEvent(AdValue adValue) {
-              sendPaidMessage(MSG_APPOPEN, adValue);
+              sendPaidMessage(MSG_APPOPEN, adValue, ad.getAdUnitId(), ad.getResponseInfo());
             }
           });
           if (showImmediately) {
@@ -524,7 +546,7 @@ public class AdmobJNI implements LifecycleObserver {
                    mInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
                      @Override
                      public void onPaidEvent(AdValue adValue) {
-                       sendPaidMessage(MSG_INTERSTITIAL, adValue);
+                       sendPaidMessage(MSG_INTERSTITIAL, adValue, interstitialAd.getAdUnitId(), interstitialAd.getResponseInfo());
                      }
                    });
                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
@@ -627,7 +649,7 @@ public class AdmobJNI implements LifecycleObserver {
               mRewardedAd.setOnPaidEventListener(new OnPaidEventListener() {
                 @Override
                 public void onPaidEvent(AdValue adValue) {
-                  sendPaidMessage(MSG_REWARDED, adValue);
+                  sendPaidMessage(MSG_REWARDED, adValue, rewardedAd.getAdUnitId(), rewardedAd.getResponseInfo());
                 }
               });
               mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
@@ -732,7 +754,7 @@ public class AdmobJNI implements LifecycleObserver {
               mRewardedInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
                 @Override
                 public void onPaidEvent(AdValue adValue) {
-                  sendPaidMessage(MSG_REWARDED_INTERSTITIAL, adValue);
+                  sendPaidMessage(MSG_REWARDED_INTERSTITIAL, adValue, rewardedAd.getAdUnitId(), rewardedAd.getResponseInfo());
                 }
               });
               mRewardedInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
@@ -847,7 +869,7 @@ public class AdmobJNI implements LifecycleObserver {
           view.setOnPaidEventListener(new OnPaidEventListener() {
             @Override
             public void onPaidEvent(AdValue adValue) {
-              sendPaidMessage(MSG_BANNER, adValue);
+              sendPaidMessage(MSG_BANNER, adValue, view.getAdUnitId(), view.getResponseInfo());
             }
           });
           view.setAdListener(new AdListener() {
