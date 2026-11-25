@@ -37,71 +37,122 @@ dependencies {
   annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.8.3"
 
   {{#admob.applovin_android}}
-  implementation 'com.google.ads.mediation:applovin:13.6.3.0'
+  implementation('com.google.ads.mediation:applovin:13.6.3.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.applovin_android}}
 
   {{#admob.bidmachine_android}}
-  implementation 'com.google.ads.mediation:bidmachine:3.7.1.1'
+  implementation('com.google.ads.mediation:bidmachine:3.7.1.1') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.bidmachine_android}}
 
   {{#admob.chartboost_android}}
-  implementation 'com.google.ads.mediation:chartboost:9.13.0.0'
+  implementation('com.google.ads.mediation:chartboost:9.13.0.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.chartboost_android}}
 
   {{#admob.dt_exchange_android}}
-  implementation 'com.google.ads.mediation:fyber:8.4.6.0'
+  implementation('com.google.ads.mediation:fyber:8.4.6.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.dt_exchange_android}}
 
   {{#admob.imobile_android}}
-  implementation 'com.google.ads.mediation:imobile:2.3.2.4'
+  implementation('com.google.ads.mediation:imobile:2.3.2.4') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.imobile_android}}
 
   {{#admob.inmobi_android}}
-  implementation 'com.google.ads.mediation:inmobi:11.4.0.0'
+  implementation('com.google.ads.mediation:inmobi:11.4.0.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.inmobi_android}}
 
   {{#admob.ironsource_android}}
-  implementation 'com.google.ads.mediation:ironsource:9.5.0.0'
+  implementation('com.google.ads.mediation:ironsource:9.5.0.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.ironsource_android}}
 
   {{#admob.liftoff_android}}
-  implementation 'com.google.ads.mediation:vungle:7.7.6.0'
+  implementation('com.google.ads.mediation:vungle:7.7.6.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.liftoff_android}}
 
   {{#admob.line_android}}
-  implementation 'com.google.ads.mediation:line:3.1.1.1'
+  implementation('com.google.ads.mediation:line:3.1.1.1') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.line_android}}
 
   {{#admob.maio_android}}
-  implementation 'com.google.ads.mediation:maio:2.0.8.2'
+  implementation('com.google.ads.mediation:maio:2.0.8.2') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.maio_android}}
 
   {{#admob.meta_android}}
-  implementation 'com.google.ads.mediation:facebook:6.21.0.4'
+  implementation('com.google.ads.mediation:facebook:6.21.0.4') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.meta_android}}
 
   {{#admob.mintegral_android}}
-  implementation 'com.google.ads.mediation:mintegral:17.1.61.1'
+  implementation('com.google.ads.mediation:mintegral:17.1.61.1') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.mintegral_android}}
 
   {{#admob.moloco_android}}
-  implementation 'com.google.ads.mediation:moloco:4.10.1.0'
+  implementation('com.google.ads.mediation:moloco:4.10.1.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.moloco_android}}
 
   {{#admob.mytarget_android}}
-  implementation 'com.google.ads.mediation:mytarget:5.47.1.1'
+  implementation('com.google.ads.mediation:mytarget:5.47.1.1') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.mytarget_android}}
 
   {{#admob.pangle_android}}
-  implementation 'com.google.ads.mediation:pangle:8.1.0.5.0'
+  implementation('com.google.ads.mediation:pangle:8.1.0.5.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.pangle_android}}
 
   {{#admob.pubmatic_android}}
-  implementation 'com.google.ads.mediation:pubmatic:5.2.0.0'
+  implementation('com.google.ads.mediation:pubmatic:5.2.0.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.pubmatic_android}}
 
   {{#admob.unity_android}}
   implementation 'com.unity3d.ads:unity-ads:4.19.0'
-  implementation 'com.google.ads.mediation:unity:4.19.0.0'
+  implementation('com.google.ads.mediation:unity:4.19.0.0') {
+    exclude group: 'com.google.android.gms', module: 'play-services-ads'
+    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
+  }
   {{/admob.unity_android}}
 }
