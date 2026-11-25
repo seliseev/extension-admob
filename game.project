@@ -24,13 +24,14 @@ bundle_identifier = com.defold.adtest
 package = com.defold.adtest
 immersive_mode = 1
 display_cutout = 0
-minimum_sdk_version = 23
+minimum_sdk_version = 24
 
 [osx]
 bundle_identifier = com.defold.adtest
 
 [library]
 include_dirs = extension-admob
+defold_min_version = 1.14.0
 
 [admob]
 app_id_ios = ca-app-pub-3940256099942544~1458002511
