@@ -252,7 +252,15 @@ def render_gradle(data: Dict[str, Dict[str, object]], sdk_info: Dict[str, str], 
             continue
         lines.append(f"  {{{{#admob.{key}_android}}}}")
         for dep in deps:
-            lines.append(f"  implementation '{dep}'")
+            if dep.startswith("com.google.ads.mediation:"):
+                # Defold's build server ignores configurations.configureEach, so the
+                # legacy SDK pulled by adapters must be excluded per dependency.
+                lines.append(f"  implementation('{dep}') {{")
+                lines.append("    exclude group: 'com.google.android.gms', module: 'play-services-ads'")
+                lines.append("    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'")
+                lines.append("  }")
+            else:
+                lines.append(f"  implementation '{dep}'")
         lines.append(f"  {{{{/admob.{key}_android}}}}")
         lines.append("")
     if lines[-1] == "":
