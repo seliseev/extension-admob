@@ -31,7 +31,7 @@ configurations.configureEach {
 }
 
 dependencies {
-  implementation "com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.5.0"
+  implementation "com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.7.0"
   implementation "androidx.lifecycle:lifecycle-common:2.8.3"
   implementation "androidx.lifecycle:lifecycle-process:2.8.3"
   annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.8.3"

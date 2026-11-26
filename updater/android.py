@@ -46,9 +46,9 @@ NETWORK_MAP = {
     "unity": "unity",
 }
 
-# Highest GMA Next-Gen SDK version to use. 1.6.0+ depends on androidx.javascriptengine (minSdk 26),
-# which fails the manifest merge for games with minSdk 24-25. Set to None to take the latest.
-MAX_ANDROID_SDK_VERSION = "1.5.0"
+# Highest GMA Next-Gen SDK version to use, None - the latest. Note: 1.6.0+ depends on
+# androidx.javascriptengine, which requires minSdk 26 in the game.
+MAX_ANDROID_SDK_VERSION = None
 
 # Adapters listed on the AdMob site that the extension doesn't support yet (no game.project switch)
 IGNORED_ADAPTERS = {"bigo"}

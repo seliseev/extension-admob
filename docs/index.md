@@ -22,7 +22,7 @@ Before you begin you need to either [sign in](https://admob.google.com/home/) to
 
 ### Android requirements
 
-Android builds use the [GMA Next-Gen SDK](https://developers.google.com/admob/android/next-gen/quick-start), which requires Android minimum SDK version 24 and compile SDK version 34 or later. [The GMA Next-Gen SDK does not support Android TV](https://developers.google.com/admob/android/next-gen/sdk).
+Android builds use the [GMA Next-Gen SDK](https://developers.google.com/admob/android/next-gen/quick-start), which requires compile SDK version 34 or later. Since GMA 1.6.0 the SDK depends on `androidx.javascriptengine`, so the game needs Android minimum SDK version 26 (`[android] minimum_sdk_version = 26`). [The GMA Next-Gen SDK does not support Android TV](https://developers.google.com/admob/android/next-gen/sdk).
 
 The removed Android `SMART_BANNER` format is no longer exposed by the extension. Use `admob.SIZE_ADAPTIVE_BANNER` instead.
 
