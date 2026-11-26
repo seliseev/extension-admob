@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
     site-rebuild:
+        if: github.repository == 'defold/extension-admob'
         runs-on: ubuntu-latest
 
         steps: [
