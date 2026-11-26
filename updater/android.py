@@ -46,6 +46,13 @@ NETWORK_MAP = {
     "unity": "unity",
 }
 
+# Highest GMA Next-Gen SDK version to use. 1.6.0+ depends on androidx.javascriptengine (minSdk 26),
+# which fails the manifest merge for games with minSdk 24-25. Set to None to take the latest.
+MAX_ANDROID_SDK_VERSION = "1.5.0"
+
+# Adapters listed on the AdMob site that the extension doesn't support yet (no game.project switch)
+IGNORED_ADAPTERS = {"bigo"}
+
 EXTRA_REPOS = {
     # Chartboost SDK is hosted on their repo, not on Maven Central
     "chartboost": ["maven { url 'https://cboost.jfrog.io/artifactory/chartboost-ads/' }"],
@@ -133,6 +140,8 @@ def fetch_latest_android_sdk(current_version: str = "") -> Dict[str, object]:
             versions.append((vid, cells[2]))
     if not versions:
         raise RuntimeError("Unable to parse Android SDK version from release notes")
+    if MAX_ANDROID_SDK_VERSION:
+        versions = [v for v in versions if version_key(v[0]) <= version_key(MAX_ANDROID_SDK_VERSION)]
     versions.sort(key=lambda x: version_key(x[0]), reverse=True)
     latest_version, _ = versions[0]
     notes_filtered: List[Dict[str, object]] = []
@@ -194,6 +203,8 @@ def parse_frame(html: str) -> Dict[str, Dict[str, object]]:
     for inp in soup.select("input[type='checkbox']"):
         name_attr = inp.get("name")
         if not name_attr:
+            continue
+        if name_attr in IGNORED_ADAPTERS:
             continue
         found_names.add(name_attr)
         key = NETWORK_MAP.get(name_attr)
